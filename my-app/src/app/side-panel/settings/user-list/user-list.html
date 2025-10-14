@@ -1,0 +1,45 @@
+<div class="users-container">
+    <div class="header">
+      <h2>👥 Users</h2>
+      <button class="btn-create" routerLink="/users/edit/0">+ Create User</button>
+    </div>
+  
+    <table class="user-table" *ngIf="users.length > 0; else noUsers">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Mobile</th>
+          <th>Whatsapp</th>
+          <th>Adhar</th>
+          <th>Pan</th>
+          <th>Address</th>
+          <th>Notes</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{ user.name }}</td>
+          <td>{{ user.username }}</td>
+          <td>{{ user.email || '-' }}</td>
+          <td>{{ user.mobileNumber || '-' }}</td>
+          <td>{{ user.whatsappNumber || '-' }}</td>
+          <td>{{ user.adharNumber || '-' }}</td>
+          <td>{{ user.panNumber || '-' }}</td>
+          <td>{{ user.address || '-' }}</td>
+          <td>{{ user.notes || '-' }}</td>
+          <td>
+            <button class="btn-edit" (click)="editUser(user.id)">✏️ Edit</button>
+            
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  
+    <ng-template #noUsers>
+      <p class="empty">No users found. Click "Create User" to add one.</p>
+    </ng-template>
+  </div>
+  

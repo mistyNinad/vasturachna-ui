@@ -1,0 +1,163 @@
+.project-details {
+  max-width: 1000px;
+  margin: auto;
+  padding: 2rem;
+  font-family: 'Inter', sans-serif;
+  color: #333;
+}
+
+.project-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.status-chip {
+  background: #e3f2fd;
+  color: #1565c0;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.overview {
+  color: #555;
+  margin-top: 0.5rem;
+}
+
+/* Summary Grid */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.summary-card {
+  background: #f9fafc;
+  padding: 1rem;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.summary-card h4 {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #1976d2;
+}
+
+/* Details */
+.detail-card {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+.detail-card h3 {
+  margin-bottom: 0.8rem;
+  color: #0d47a1;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.6rem 1.5rem;
+}
+
+/* Stage Tracker */
+.stage-tracker {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.stage {
+  background: #f1f8e9;
+  padding: 6px 14px;
+  border-radius: 20px;
+}
+
+.stage.completed {
+  background: #c8e6c9;
+}
+
+.stage.current {
+  background: #bbdefb;
+}
+
+.stage .arrow {
+  margin: 0 6px;
+}
+
+/* Stages list */
+.stages-container ul {
+  list-style: none;
+  padding-left: 1rem;
+}
+
+.stages-container li {
+  margin-bottom: 0.5rem;
+}
+
+.stages-container li.active {
+  font-weight: 600;
+  color: #2e7d32;
+}
+
+/* Payment Table */
+.payments-section {
+  background: #f9fafc;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  margin-top: 2rem;
+}
+
+.payments-section table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+
+.payments-section th, 
+.payments-section td {
+  padding: 0.6rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.payment-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.8rem;
+}
+
+.btn {
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: #1976d2;
+  color: #fff;
+}
+
+.btn-success {
+  background: #2e7d32;
+  color: #fff;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}

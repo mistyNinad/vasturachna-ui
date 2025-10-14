@@ -1,0 +1,138 @@
+<div class="create-project-box">
+  <h2>{{ isEditMode ? 'Edit Project' : 'Create Project' }}</h2>
+
+  <form (ngSubmit)="onSubmit()" class="project-form">
+    <!-- Title -->
+    <div class="form-field">
+      <label>Title</label>
+      <input type="text" [(ngModel)]="project.title" name="title" required>
+    </div>
+
+    <!-- Overview -->
+    <div class="form-field full-width">
+      <label>Overview</label>
+      <textarea [(ngModel)]="project.overview" name="overview"></textarea>
+    </div>
+
+    <!-- Location -->
+    <div class="form-field">
+      <label>Location</label>
+      <input type="text" [(ngModel)]="project.location" name="location" required>
+    </div>
+
+    <!-- Project Cost -->
+    <div class="form-field">
+      <label>Project Cost</label>
+      <input type="number" [(ngModel)]="project.projectCost" name="projectCost">
+    </div>
+
+    <!-- Estimated Cost -->
+    <div class="form-field">
+      <label>Estimated Cost</label>
+      <input type="number" [(ngModel)]="project.estimatedCost" name="estimatedCost">
+    </div>
+
+    <!-- Land Details -->
+    <fieldset class="form-section">
+      <legend>Land Details</legend>
+
+      <div class="grid-2">
+        <div class="form-field">
+          <label>Zone</label>
+          <select [(ngModel)]="project.landDetails.zone" name="zone">
+            <option value="agricultural">Agricultural</option>
+            <option value="commercial">Commercial</option>
+            <option value="industrial">Industrial</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label>UBL</label>
+          <select [(ngModel)]="project.landDetails.ubl" name="ubl">
+            <option value="PMRDA">PMRDA</option>
+            <option value="TP">TP</option>
+            <option value="Municipal corp.">Municipal Corp.</option>
+            <option value="Gram panchayat">Gram Panchayat</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label>Plot No</label>
+          <input type="text" [(ngModel)]="project.landDetails.plotNo" name="plotNo">
+        </div>
+
+        <div class="form-field">
+          <label>Land Type</label>
+          <select [(ngModel)]="project.landDetails.landType" name="landType">
+            <option value="agricultural">Agricultural</option>
+            <option value="non-agricultural">Non-Agricultural</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label>Area Type</label>
+          <select [(ngModel)]="project.landDetails.areaType" name="areaType">
+            <option value="congested">Congested</option>
+            <option value="non-congested">Non-Congested</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label>FSI</label>
+          <select [(ngModel)]="project.landDetails.fsi" name="fsi">
+            <option value="0.5">0.5</option>
+            <option value="1.1">1.1</option>
+            <option value="1.5">1.5</option>
+          </select>
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- Blueprint Section -->
+    <fieldset class="form-section">
+      <legend>Blueprint Requirements</legend>
+
+      <label>
+        <input type="checkbox" [(ngModel)]="project.blueprintDetails.nationalizedBankLoan" name="loanProcess">
+        Required for Nationalized Bank Loan
+      </label>
+      <label>
+        <input type="checkbox" [(ngModel)]="project.blueprintDetails.pmayScheme" name="pmayScheme">
+        Required for PMAY Scheme
+      </label>
+
+      <div class="grid-2">
+        <div class="form-field">
+          <label>Type</label>
+          <select [(ngModel)]="project.blueprintDetails.type" name="blueprintType">
+            <option value="offline">Offline</option>
+            <option value="online">Online</option>
+          </select>
+        </div>
+
+        <div class="form-field" *ngIf="project.blueprintDetails.type === 'online'">
+          <label>Proposal Code</label>
+          <input type="text" [(ngModel)]="project.blueprintDetails.proposalCode" name="proposalCode">
+        </div>
+      </div>
+
+      <div class="form-field full-width user-search">
+        <label>Select User:</label>
+        <input
+          type="text"
+          [(ngModel)]="userSearchTerm"
+          (input)="filterUsers()"
+          placeholder="Search by name or mobile"
+          [ngModelOptions]="{ standalone: true }"
+        />
+        <ul *ngIf="filteredUsers.length > 0" class="dropdown">
+          <li *ngFor="let user of filteredUsers" (click)="selectUser(user)">
+            {{ user.name }} — {{ user.mobileNumber }}
+          </li>
+        </ul>
+      </div>
+    </fieldset>
+
+    <button type="submit">{{ isEditMode ? 'Update Project' : 'Create Project' }}</button>
+  </form>
+</div>

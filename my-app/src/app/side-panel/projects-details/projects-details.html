@@ -1,0 +1,153 @@
+<div class="project-details" *ngIf="!loading && project; else loadingTpl">
+
+  <!-- HEADER -->
+  <header class="project-header">
+    <div>
+      <h2>{{ project.title }}</h2>
+      <p class="overview">{{ project.overview }}</p>
+    </div>
+    <div class="status-chip">{{ project.status || 'N/A' }}</div>
+  </header>
+
+  <!-- SUMMARY GRID -->
+  <section class="summary-grid">
+    <div class="summary-card">
+      <h4>📍 Location</h4>
+      <p>{{ project.location }}</p>
+    </div>
+    <div class="summary-card">
+      <h4>💰 Project Cost</h4>
+      <p>{{ project.projectCost | currency:'INR' }}</p>
+    </div>
+    <div class="summary-card">
+      <h4>💵 Estimated Cost</h4>
+      <p>{{ project.estimatedCost | currency:'INR' }}</p>
+    </div>
+    <div class="summary-card">
+      <h4>🏗️ Current Stage</h4>
+      <p>{{ project.stage?.name || 'Completed' }}</p>
+    </div>
+  </section>
+
+  <!-- LAND DETAILS -->
+  <section class="detail-card">
+    <h3>Land Details</h3>
+    <div class="info-grid">
+      <div><b>Zone:</b> {{ project.landDetails?.zone }}</div>
+      <div><b>UBL:</b> {{ project.landDetails?.ubl }}</div>
+      <div><b>Plot No:</b> {{ project.landDetails?.plotNo }}</div>
+      <div><b>Land Type:</b> {{ project.landDetails?.landType }}</div>
+      <div><b>Area Type:</b> {{ project.landDetails?.areaType }}</div>
+      <div><b>FSI:</b> {{ project.landDetails?.fsi }}</div>
+    </div>
+  </section>
+
+  <!-- BLUEPRINT DETAILS -->
+  <section class="detail-card">
+    <h3>Blueprint Details</h3>
+    <div class="info-grid">
+      <div><b>Nationalized Bank Loan:</b> {{ project.blueprintDetails?.nationalizedBankLoan ? 'Yes' : 'No' }}</div>
+      <div><b>PMAY Scheme:</b> {{ project.blueprintDetails?.pmayScheme ? 'Yes' : 'No' }}</div>
+      <div><b>Type:</b> {{ project.blueprintDetails?.type }}</div>
+      <div *ngIf="project.blueprintDetails?.proposalCode">
+        <b>Proposal Code:</b> {{ project.blueprintDetails.proposalCode }}
+      </div>
+    </div>
+  </section>
+
+  <!-- STAGE TRACKER -->
+  <section class="stage-section">
+    <h3>Stage Progress</h3>
+    <div class="stage-tracker" *ngIf="project.stage">
+      <div class="stage completed" *ngIf="project.stage.parentStageName">
+        <span>{{ project.stage.parentStageName }}</span>
+        <span class="arrow">→</span>
+      </div>
+      <div class="stage current">
+        <span>{{ project.stage.name }}</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- STAGE LIST -->
+  <section class="detail-card stages-container" *ngIf="stages.length > 0; else noStages">
+    <h3>Project Stages</h3>
+    <ul>
+      <li *ngFor="let stage of stages" [class.active]="stage.active">
+        {{ stage.name }}
+        <ul *ngIf="stage.children.length > 0">
+          <li *ngFor="let child of stage.children" [class.active]="child.active">
+            {{ child.name }}
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ACTION CARD -->
+  <section class="project-card">
+    <h3>{{ project.title }}</h3>
+    <p>
+      Current Stage: {{ project.stage?.name || 'Completed' }}
+      <span *ngIf="project.stage?.parentStageName">(Parent: {{ project.stage.parentStageName }})</span>
+    </p>
+    <button 
+      *ngIf="project.stage" 
+      (click)="completeStage(project)"
+      class="btn btn-primary">
+      Complete Current Stage
+    </button>
+  </section>
+
+  <!-- PAYMENTS -->
+  <section class="payments-section">
+    <h3>💳 Payments</h3>
+
+    <div *ngIf="paymentsLoading">Loading payments...</div>
+
+    <table *ngIf="!paymentsLoading && payments.length > 0; else noPayments">
+      <thead>
+        <tr>
+          <th>Amount</th>
+          <th>Mode</th>
+          <th>Reference</th>
+          <th>Remarks</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let payment of payments">
+          <td>{{ payment.amount | currency:'INR' }}</td>
+          <td>{{ payment.paymentMode }}</td>
+          <td>{{ payment.referenceNumber || '-' }}</td>
+          <td>{{ payment.remarks || '-' }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <form (ngSubmit)="addPayment()" #paymentForm="ngForm" class="payment-form">
+      <input type="number" placeholder="Amount" [(ngModel)]="newPayment.amount" name="amount" required>
+      <select [(ngModel)]="newPayment.paymentMode" name="paymentMode" required>
+        <option value="" disabled selected>Select Mode</option>
+        <option value="CASH">Cash</option>
+        <option value="BANK_TRANSFER">Bank Transfer</option>
+        <option value="CHEQUE">Cheque</option>
+      </select>
+      <input type="text" placeholder="Reference" [(ngModel)]="newPayment.referenceNumber" name="referenceNumber">
+      <input type="text" placeholder="Remarks" [(ngModel)]="newPayment.remarks" name="remarks">
+      <button type="submit" [disabled]="!paymentForm.valid" class="btn btn-success">Add Payment</button>
+    </form>
+
+    <ng-template #noPayments>
+      <p>No payments recorded yet.</p>
+    </ng-template>
+  </section>
+
+  <ng-template #noStages>
+    <p>No stages available for this project.</p>
+  </ng-template>
+
+</div>
+
+<ng-template #loadingTpl>
+  <p>⏳ Loading project details...</p>
+</ng-template>

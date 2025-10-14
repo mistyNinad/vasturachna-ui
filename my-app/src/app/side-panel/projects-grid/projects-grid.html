@@ -1,0 +1,49 @@
+<div class="projects-container">
+  <div class="projects-header">
+    <h2>📂 Projects</h2>
+    <button class="btn btn-primary" (click)="createNewProject()">➕ New Project</button>
+  </div>
+
+  <table class="project-table" *ngIf="projects.length > 0; else noProjects">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Title</th>
+        <th>Overview</th>
+        <th>Location</th>
+        <th>Estimated Cost</th>
+        <th>Zone</th>
+        <th>UBL</th>
+        <th>Plot No</th>
+        <th>Land Type</th>
+        <th>FSI</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let project of projects; let i = index" (click)="viewDetails(project.id)" class="clickable-row">
+        <td>{{ i + 1 }}</td>
+        <td>{{ project.title }}</td>
+        <td class="truncate">{{ project.overview }}</td>
+        <td>{{ project.location }}</td>
+        <td>{{ project.estimatedCost | currency:'INR' }}</td>
+        <td>{{ project.landDetails?.zone }}</td>
+        <td>{{ project.landDetails?.ubl }}</td>
+        <td>{{ project.landDetails?.plotNo }}</td>
+        <td>{{ project.landDetails?.landType }}</td>
+        <td>{{ project.landDetails?.fsi }}</td>
+        <td class="actions">
+          <button (click)="editProject(project.id); $event.stopPropagation()" class="btn btn-small btn-primary">
+            ✏️ Edit
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ng-template #noProjects>
+    <div class="no-projects">
+      <p>🚧 No projects available yet.</p>
+    </div>
+  </ng-template>
+</div>

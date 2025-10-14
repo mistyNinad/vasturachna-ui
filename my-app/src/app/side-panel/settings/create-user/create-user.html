@@ -1,0 +1,96 @@
+<mat-card class="user-card">
+  <mat-card-title>
+    {{ isEditMode ? '✏️ Edit User' : '👤 Create New User' }}
+  </mat-card-title>
+
+  <mat-card-content>
+    <form (ngSubmit)="onSubmit()" #userForm="ngForm">
+
+      <div class="form-grid">
+        <!-- Name -->
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Name</mat-label>
+            <input matInput [(ngModel)]="user.name" name="name" required>
+          </mat-form-field>
+        </div>
+    
+        <!-- Username -->
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Username</mat-label>
+            <input matInput [(ngModel)]="user.username" name="username">
+          </mat-form-field>
+        </div>
+    
+        <!-- Password (only on create mode) -->
+        <div class="form-group" *ngIf="!isEditMode">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Password</mat-label>
+            <input matInput type="password" [(ngModel)]="user.password" name="password" required>
+          </mat-form-field>
+        </div>
+    
+        <!-- Email -->
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" [(ngModel)]="user.email" name="email">
+          </mat-form-field>
+        </div>
+    
+        <!-- WhatsApp -->
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>WhatsApp Number</mat-label>
+            <input matInput [(ngModel)]="user.whatsappNumber" name="whatsappNumber">
+          </mat-form-field>
+        </div>
+    
+        <!-- Mobile -->
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Mobile Number</mat-label>
+            <input matInput [(ngModel)]="user.mobileNumber" name="mobileNumber">
+          </mat-form-field>
+        </div>
+    
+        <!-- Aadhaar -->
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Aadhaar Number</mat-label>
+            <input matInput [(ngModel)]="user.adharNumber" name="adharNumber">
+          </mat-form-field>
+        </div>
+    
+        <!-- PAN -->
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>PAN Number</mat-label>
+            <input matInput [(ngModel)]="user.panNumber" name="panNumber">
+          </mat-form-field>
+        </div>
+      </div>
+    
+      <!-- Full-width fields -->
+      <mat-form-field appearance="outline" class="full-width mt-3">
+        <mat-label>Address</mat-label>
+        <textarea matInput [(ngModel)]="user.address" name="address" rows="2"></textarea>
+      </mat-form-field>
+    
+      <mat-form-field appearance="outline" class="full-width mt-2">
+        <mat-label>Notes</mat-label>
+        <textarea matInput [(ngModel)]="user.notes" name="notes" rows="2"></textarea>
+      </mat-form-field>
+    
+      <!-- Submit -->
+      <div class="btn-container">
+        <button mat-raised-button color="primary" type="submit">
+          {{ isEditMode ? '💾 Update User' : '➕ Create User' }}
+        </button>
+      </div>
+    
+    </form>
+    
+  </mat-card-content>
+</mat-card>
