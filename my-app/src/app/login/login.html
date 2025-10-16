@@ -1,31 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Attractive Login</title>
-    <link rel="stylesheet" href="login.css">
-</head>
-<body>
-<div class="login-container">
-    <form (ngSubmit)= "onLogin()" class="login-form">
-      <h2>Login</h2>
-        <div class="input-group">
-            <input [(ngModel)]="username" name="username" type="text" id="username" required>
-    
-            <label for="username">Username</label>    
-        </div>
-        <div class="input-group">
-            <input [(ngModel)]="password" name ="password" type="password" id="password" required>
-            <label for="password">Password</label> 
-        </div>
-        <button type="submit" class="login-button">Login</button>
-        <div class="links">
-            <a href="#">Forgot Password?</a>
-            <a href="#">Sign Up</a>
-        </div>
-      </form>
-    </div>
-</body>
-</html>
-  
+<div class="login-wrapper">
+  <div class="login-card">
+    <h2>Vasturachana</h2>
+    <p class="subtitle">Building the future, one design at a time</p>
+    <p class="subtitle">Sign in to your account</p>
+
+    <form (ngSubmit)="onLogin()" #loginForm="ngForm" novalidate>
+      <div class="input-group">
+        <label for="username">Username</label>
+        <input
+          [(ngModel)]="username"
+          name="username"
+          id="username"
+          type="text"
+          required
+          placeholder="Enter your username"
+        />
+      </div>
+
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input
+          [(ngModel)]="password"
+          name="password"
+          id="password"
+          type="password"
+          required
+          placeholder="Enter your password"
+        />
+      </div>
+
+      <button type="submit" class="login-button" [disabled]="loginForm.invalid">
+        Login
+      </button>
+
+      <div class="links">
+        <a href="#">Forgot Password?</a>
+        <a href="#">Create Account</a>
+      </div>
+    </form>
+  </div>
