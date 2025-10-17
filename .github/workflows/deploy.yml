@@ -1,0 +1,49 @@
+name: Deploy Angular + Java to EC2
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Start SSH agent
+        uses: webfactory/ssh-agent@v0.9.1
+        with:
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+
+      - name: SSH and deploy
+        run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@13.48.14.89 << 'EOF'
+            set -e
+
+            echo "🚀 Starting ui deployment..."
+
+            # === FRONTEND ===
+            echo "--- Pulling latest frontend code ---"
+            cd /home/ubuntu/ui/vasturachna-ui/my-app
+            git fetch --all
+            git reset --hard origin/master
+
+            echo "--- Installing dependencies ---"
+            npm ci  # faster, cleaner than npm install
+
+            echo "--- Installing Angular CLI (locally) ---"
+            npm install @angular/cli@latest --save-dev
+            
+            echo "--- Building Angular frontend ---"
+            npx ng build --configuration production
+
+            echo "--- Deploying frontend to Nginx ---"
+            sudo rm -rf /var/www/html/*
+            sudo cp -r /home/ubuntu/ui/vasturachna-ui/my-app/dist/my-app/browser/* /var/www/html/
+            sudo systemctl reload nginx
+
+            echo "✅ Deployment completed successfully!"
+          EOF
