@@ -15,7 +15,7 @@ export interface User {
 export class UserService {
 
   //private apiUrl = 'http://:8080/user';
-  private apiUrl = `${environment.apiUrl}/user`;
+  private apiUrl = `${environment.apiUrl}/api/v1/user`;
 
   constructor(private http: HttpClient) {}
 
