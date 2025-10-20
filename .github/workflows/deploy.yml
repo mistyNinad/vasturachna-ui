@@ -1,4 +1,4 @@
-name: Deploy Angular 
+name: Deploy Angular + Java to EC2 (Fast)
 
 on:
   push:
@@ -13,38 +13,40 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # --- Build frontend locally ---
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-
-      - name: Cache node modules
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build Angular frontend
-        run: |
-          cd ui/vasturachna-ui/my-app
-          npm install @angular/cli@latest --save-dev
-          npx ng build --configuration production
-
-      # --- Deploy to server ---
       - name: Start SSH agent
         uses: webfactory/ssh-agent@v0.9.1
         with:
           ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
-      - name: Deploy frontend to EC2
+      - name: SSH and deploy
         run: |
-          rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" \
-            ./dist/my-app/browser/ ubuntu@13.48.14.89:/var/www/html/
+          ssh -o StrictHostKeyChecking=no ubuntu@13.48.14.89 << 'EOF'
+            set -e
 
-          ssh -o StrictHostKeyChecking=no ubuntu@13.48.14.89 "sudo systemctl reload nginx"
+            echo "🚀 Starting deployment..."
+
+            # === FRONTEND ===
+            echo "--- Updating frontend code ---"
+            cd /home/ubuntu/ui/vasturachna-ui/my-app
+            git fetch --all
+            git reset --hard origin/master
+
+            echo "--- Installing dependencies ---"
+            npm ci
+
+            echo "--- Installing Angular CLI locally ---"
+            npm install @angular/cli@latest --save-dev
+
+            echo "--- Building Angular frontend ---"
+            npx ng build --configuration production
+
+            echo "--- Deploying frontend to Nginx ---"
+            sudo rm -rf /var/www/html/*
+            sudo cp -r /home/ubuntu/ui/vasturachna-ui/my-app/dist/my-app/browser/* /var/www/html/
+            
+            echo "--- Reloading Nginx ---"
+            sudo systemctl reload nginx
+
+            echo "✅ Frontend deployed successfully!"
+
+          EOF
