@@ -1,4 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://shubhavastu.in:8443'   // 👈 your live backend URL
+  //apiUrl: 'https://shubhavastu.in:8443'   // 👈 your live backend URL
+  apiUrl : 'https://www.shubhavastu.in'
+
 };
