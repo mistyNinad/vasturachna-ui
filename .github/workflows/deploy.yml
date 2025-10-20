@@ -1,4 +1,4 @@
-name: Deploy Angular + Java to EC2 (Fast)
+name: Deploy Angular + Java to EC2
 
 on:
   push:
@@ -8,6 +8,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
 
     steps:
       - name: Checkout repository
@@ -18,24 +19,24 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
-      - name: SSH and deploy
+      - name: SSH and deploy (Frontend)
         run: |
           ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=60 ubuntu@13.48.14.89 << 'EOF'
             set -e
 
-            echo "🚀 Starting deployment..."
+            echo "🚀 Starting ui deployment..."
 
             # === FRONTEND ===
-            echo "--- Updating frontend code ---"
+            echo "--- Pulling latest frontend code ---"
             cd /home/ubuntu/ui/vasturachna-ui/my-app
             git fetch --all
             git reset --hard origin/master
 
             echo "--- Installing dependencies ---"
-            npm ci
+            npm ci --silent
 
-            echo "--- Installing Angular CLI locally ---"
-            npm install @angular/cli@latest --save-dev
+            echo "--- Installing Angular CLI (locally) ---"
+            npm install @angular/cli@latest --save-dev --silent
 
             echo "--- Building Angular frontend ---"
             npx ng build --configuration production
@@ -43,10 +44,7 @@ jobs:
             echo "--- Deploying frontend to Nginx ---"
             sudo rm -rf /var/www/html/*
             sudo cp -r /home/ubuntu/ui/vasturachna-ui/my-app/dist/my-app/browser/* /var/www/html/
-            
-            echo "--- Reloading Nginx ---"
             sudo systemctl reload nginx
 
             echo "✅ Frontend deployed successfully!"
-
           EOF
