@@ -20,7 +20,7 @@ jobs:
 
       - name: SSH and deploy
         run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@13.48.14.89 << 'EOF'
+          ssh -o StrictHostKeyChecking=no-o ServerAliveInterval=60 ubuntu@13.48.14.89 << 'EOF'
             set -e
 
             echo "🚀 Starting deployment..."
