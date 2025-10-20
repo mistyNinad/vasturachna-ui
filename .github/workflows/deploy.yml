@@ -1,4 +1,4 @@
-name: Deploy Angular + Java to EC2
+name: Deploy Angular 
 
 on:
   push:
@@ -13,37 +13,37 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # --- Build frontend locally ---
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Angular frontend
+        run: |
+          npm install @angular/cli@latest --save-dev
+          npx ng build --configuration production
+
+      # --- Deploy to server ---
       - name: Start SSH agent
         uses: webfactory/ssh-agent@v0.9.1
         with:
           ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
-      - name: SSH and deploy
+      - name: Deploy frontend to EC2
         run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@13.48.14.89 << 'EOF'
-            set -e
+          rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" \
+            ./dist/my-app/browser/ ubuntu@13.48.14.89:/var/www/html/
 
-            echo "🚀 Starting ui deployment..."
-
-            # === FRONTEND ===
-            echo "--- Pulling latest frontend code ---"
-            cd /home/ubuntu/ui/vasturachna-ui/my-app
-            git fetch --all
-            git reset --hard origin/master
-
-            echo "--- Installing dependencies ---"
-            npm ci  # faster, cleaner than npm install
-
-            echo "--- Installing Angular CLI (locally) ---"
-            npm install @angular/cli@latest --save-dev
-            
-            echo "--- Building Angular frontend ---"
-            npx ng build --configuration production
-
-            echo "--- Deploying frontend to Nginx ---"
-            sudo rm -rf /var/www/html/*
-            sudo cp -r /home/ubuntu/ui/vasturachna-ui/my-app/dist/my-app/browser/* /var/www/html/
-            sudo systemctl reload nginx
-
-            echo "✅ Deployment completed successfully!"
-          EOF
+          ssh -o StrictHostKeyChecking=no ubuntu@13.48.14.89 "sudo systemctl reload nginx"
