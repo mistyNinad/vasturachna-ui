@@ -161,3 +161,15 @@
 .btn:hover {
   opacity: 0.9;
 }
+.stage-root { list-style: none; padding-left: 0; }
+.stage-item { padding: 0.5rem 0; border-bottom: 1px solid #eee; }
+.stage-main { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+.stage-meta { display:flex; align-items:center; gap:0.5rem; }
+.stage-order { color:#666; font-size:0.9rem; margin-left:0.5rem; }
+.stage-children { list-style: none; padding-left: 1.25rem; margin-top: 0.5rem; }
+.child-indent { margin-right: 0.5rem; color:#6c757d; }
+.small { font-size: 0.85rem; color: #444; }
+.muted { color:#6c757d; }
+.remarks { margin-top: 0.25rem; color:#333; font-style:italic; }
+.stage-child { padding: 0.25rem 0; }
+.stage-item.active > .stage-main { background: #f0f9ff; }

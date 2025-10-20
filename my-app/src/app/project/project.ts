@@ -23,7 +23,7 @@ export class Project {
     title: '',
     overview: '',
     location: '',
-    projectCost: '',
+    projectConstructionCost: '',
     estimatedCost: null,
     images: [],
     landDetails: {
@@ -64,6 +64,12 @@ export class Project {
       this.projectService.getProjectById(this.projectId).subscribe({
         next: (res) => {
           this.project = res; // populate form
+                  // --- NEW: initialize selected user for edit mode ---
+        if (this.project.userTO) {
+          this.selectedUser = this.project.userTO; // assign existing user
+          this.userSearchTerm = this.project.userTO.name + 
+                                (this.project.userTO.mobileNumber ? ' (' + this.project.userTO.mobileNumber + ')' : '');
+        }
         },
         error: (err) => console.error('❌ Error fetching project for edit:', err)
       });
@@ -87,14 +93,15 @@ export class Project {
     );
   }
 
-  // when user clicks an option
-  selectUser(user: any) {
-    this.selectedUser = user;
-    this.project.userTO = { id: user.id };  // assign to project
-    this.userSearchTerm = user.name + ' (' + user.mobileNumber + ')'; // show in input
-    this.filteredUsers = []; // hide dropdown
-    this.snackBar.open(`Selected user: ${user.name}`, 'OK', { duration: 2000 });
-  }
+// When user clicks an option
+selectUser(user: any) {
+  this.selectedUser = user;
+  // Assign the exact object backend expects
+  this.project.userTO = { id: user.id, name: user.name, mobileNumber: user.mobileNumber };
+  this.userSearchTerm = user.name + (user.mobileNumber ? ' (' + user.mobileNumber + ')' : '');
+  this.filteredUsers = [];
+  this.snackBar.open(`Selected user: ${user.name}`, 'OK', { duration: 2000 });
+}
 
 
   
@@ -111,6 +118,7 @@ export class Project {
 
     if (this.isEditMode) {
       console.log("updating project  "+this.project)
+            console.log("updating project  "+this.project.userTO.id)
       this.projectService.updateProject(this.project.id, this.project).subscribe({
         next: (res) => {
           alert('✅ Project updated successfully!');

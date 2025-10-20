@@ -36,6 +36,9 @@ import { FormsModule } from '@angular/forms';
         <ul>
           <li><a routerLink="/settings/create-user" routerLinkActive="active">➕ Create User</a></li>
         </ul>
+        <ul>
+          <li><a routerLink="/settings/stages" routerLinkActive="active">➕ Stage Payments</a></li>
+        </ul>
       </li>
       <li>
       <a routerLink="/users" routerLinkActive="active">Users</a>

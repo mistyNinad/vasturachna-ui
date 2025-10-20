@@ -16,8 +16,8 @@
       <p>{{ project.location }}</p>
     </div>
     <div class="summary-card">
-      <h4>💰 Project Cost</h4>
-      <p>{{ project.projectCost | currency:'INR' }}</p>
+      <h4>💰 Construction Cost</h4>
+      <p>{{ project.projectConstructionCost | currency:'INR' }}</p>
     </div>
     <div class="summary-card">
       <h4>💵 Estimated Cost</h4>
@@ -27,6 +27,26 @@
       <h4>🏗️ Current Stage</h4>
       <p>{{ project.stage?.name || 'Completed' }}</p>
     </div>
+
+ <!-- New cards for payments -->
+  <div class="summary-card">
+    <h4>💳 Total Paid</h4>
+    <p>{{ paymentSummary.totalPaid | currency:'INR' }}</p>
+  </div>
+  <div class="summary-card">
+    <h4>💰 Amount Due</h4>
+    <p>{{ paymentSummary.dueAmount | currency:'INR' }}</p>
+  </div>
+  <div class="summary-card">
+    <h4>📊 % Completed</h4>
+    <p>{{ paymentSummary.percentCompleted }}%</p>
+  </div>
+    <div class="summary-card">
+    <h4>💰 Total Amount Due</h4>
+    <p>{{ paymentSummary.totalDueAmount | currency:'INR' }}</p>
+  </div>
+
+
   </section>
 
   <!-- LAND DETAILS -->
@@ -70,19 +90,59 @@
   </section>
 
   <!-- STAGE LIST -->
-  <section class="detail-card stages-container" *ngIf="stages.length > 0; else noStages">
-    <h3>Project Stages</h3>
-    <ul>
-      <li *ngFor="let stage of stages" [class.active]="stage.active">
-        {{ stage.name }}
-        <ul *ngIf="stage.children.length > 0">
-          <li *ngFor="let child of stage.children" [class.active]="child.active">
-            {{ child.name }}
-          </li>
-        </ul>
-      </li>
-    </ul>
-  </section>
+<!-- STAGE LIST -->
+<section class="detail-card stages-container" *ngIf="stages.length > 0; else noStages">
+  <h3>Project Stages</h3>
+  <ul class="stage-root">
+    <li *ngFor="let stage of stages" [class.active]="stage.active" class="stage-item">
+      <div class="stage-main">
+        <div class="stage-meta">
+          <strong>{{ stage.name }}</strong>
+          <span class="stage-order">({{ stage.order }})</span>
+        </div>
+
+        <!-- Progress info for parent stage -->
+        <div class="stage-progress" *ngIf="stage.progress">
+          <div class="small">
+            <span *ngIf="stage.progress.startedOn">Started: {{ stage.progress.startedOn | date:'short' }}</span>
+            <span *ngIf="stage.progress.completedOn"> • Completed: {{ stage.progress.completedOn | date:'short' }}</span>
+            <span *ngIf="stage.progress.completedBy"> • By: {{ stage.progress.completedBy }}</span>
+          </div>
+          <div class="small remarks" *ngIf="stage.progress.remarks">Remarks: {{ stage.progress.remarks }}</div>
+        </div>
+
+        <!-- If no progression record -->
+        <div class="stage-progress small muted" *ngIf="!stage.progress">
+          <span>Not started</span>
+        </div>
+      </div>
+
+      <!-- show children if any -->
+      <ul *ngIf="stage.children?.length > 0" class="stage-children">
+        <li *ngFor="let child of stage.children" [class.active]="child.active" class="stage-child">
+          <div class="stage-main">
+            <div class="stage-meta">
+              <span class="child-indent">↳</span> {{ child.name }}
+
+            </div>
+
+            <!-- child progression -->
+            <div class="stage-progress" *ngIf="child.progress">
+              <div class="small">
+                <span *ngIf="child.progress.startedOn">Started: {{ child.progress.startedOn | date:'short' }}</span>
+                <span *ngIf="child.progress.completedOn"> • Completed: {{ child.progress.completedOn | date:'short' }}</span>
+                <span *ngIf="child.progress.completedBy"> • By: {{ child.progress.completedBy.name || child.progress.completedBy.mobileNumber }}</span>
+              </div>
+              <div class="small remarks" *ngIf="child.progress.remarks">Remarks: {{ child.progress.remarks }}</div>
+            </div>
+
+            <div class="stage-progress small muted" *ngIf="!child.progress">Not started</div>
+          </div>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</section>
 
   <!-- ACTION CARD -->
   <section class="project-card">

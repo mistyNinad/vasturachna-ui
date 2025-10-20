@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface Payment {
   id?: number;
@@ -14,11 +15,25 @@ export interface Payment {
   paidOn?: string;
 }
 
+export interface PaymentSummary {
+  id?: number;
+  projectId: number;
+  estimatedCost: number;
+  totalPaid: number;
+  percentCompleted: number;
+  dueAmount?: number;
+  payments?: Payment[];
+}
+
+
+
+
 @Injectable({
   providedIn: 'root'
 })
 export class PaymentService {
-  private apiUrl = 'http://localhost:8080/api/v1/payments';
+  //private apiUrl = 'http://localhost:8080/api/v1/payments';
+  private apiUrl = environment.apiUrl+'/api/v1/payments';
 
   constructor(private http: HttpClient) {}
 

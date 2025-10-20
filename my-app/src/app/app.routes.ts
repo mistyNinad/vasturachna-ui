@@ -7,6 +7,7 @@ import { Dashboard } from './side-panel/dashboard/dashboard';
 import { ProjectsGrid } from './side-panel/projects-grid/projects-grid';
 import { ProjectsDetails } from './side-panel/projects-details/projects-details';
 import { UserList } from './side-panel/settings/user-list/user-list';
+import { StageSettingsComponent } from './side-panel/settings/stage-settings/stage-settings';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -21,6 +22,8 @@ export const routes: Routes = [
   { path: 'projects/edit/:id', component: Project },
   { path: 'users', component: UserList },
   { path: 'users/edit/:id', component: CreateUserComponent } ,
+  { path: 'settings/stages', component: StageSettingsComponent },
+
 
   { path: '**', redirectTo: 'login' }
 ];
