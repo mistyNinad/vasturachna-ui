@@ -158,7 +158,9 @@
       Complete Current Stage
     </button>
   </section>
-
+<div *ngIf="!project?.stage">
+  <p class="text-success font-bold">🎉 Project completed — all stages finished!</p>
+</div>
   <!-- PAYMENTS -->
   <section class="payments-section">
     <h3>💳 Payments</h3>

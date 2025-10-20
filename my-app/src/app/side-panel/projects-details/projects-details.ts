@@ -35,24 +35,32 @@ export class ProjectsDetails implements OnInit {
     
     const projectId = Number(this.route.snapshot.paramMap.get('id'));
     
-    forkJoin({
-      project: this.projectService.getProjectById(projectId),
-      stages: this.stageService.getAllStages(false),
-      progressions: this.projectService.getStageProgressions(projectId)
-    }).subscribe(({ project, stages,progressions }) => {
-      this.project = project;
-      this.progressions = progressions || [];
+forkJoin({
+  project: this.projectService.getProjectById(projectId),
+  stages: this.stageService.getAllStages(false),
+  progressions: this.projectService.getStageProgressions(projectId)
+}).subscribe(({ project, stages, progressions }) => {
+  this.project = project;
+  this.progressions = progressions || [];
 
-      this.attachProgressionsToStages(stages, this.progressions);
-      // build tree
-      this.stages = this.buildStageTree(stages, project.stage.id);
-      if (this.project?.id) {
-        this.loadPayments();
-        console.log(this.payments)
-      }
-      this.loading = false;
-    this.cd.detectChanges();
-    });
+  this.attachProgressionsToStages(stages, this.progressions);
+
+  if (project?.stage?.id) {
+    // Build tree only if there’s a current stage
+    this.stages = this.buildStageTree(stages, project.stage.id);
+  } else {
+    // Handle completed project
+    this.stages = this.buildStageTree(stages, null); // or show all main stages
+    console.log("✅ Project is complete, no active stage.");
+  }
+
+  if (this.project?.id) {
+    this.loadPayments();
+  }
+
+  this.loading = false;
+  this.cd.detectChanges();
+});
 
   }
 
@@ -74,7 +82,7 @@ private attachProgressionsToStages(allStages: any[], progressions: any[]) {
 }
 
 
-  private buildStageTree(stages: any[], currentStageId: number) {
+  private buildStageTree(stages: any[], currentStageId?: number | null) {
     const stageMap = new Map <number, any>();
   
     stages.forEach(stage => {
