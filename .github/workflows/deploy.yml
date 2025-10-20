@@ -32,6 +32,7 @@ jobs:
 
       - name: Build Angular frontend
         run: |
+          cd ui/vasturachna-ui/my-app
           npm install @angular/cli@latest --save-dev
           npx ng build --configuration production
 
